@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "./dist/js",
+    // "rootDir": "./src/",
+    // "strict": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  }
+}
