@@ -41,4 +41,13 @@ export class AreaBoundary implements AreaBoundary {
 
     return point.x >= left && point.x <= right && point.y >= top && point.y <= bottom;
   }
+
+  intersects(range: AreaBoundary) {
+    return !(
+      range.x >= this.x + this.width ||
+      range.y >= this.y + this.height ||
+      range.x + range.width <= this.x ||
+      range.y + range.height <= this.y
+    );
+  }
 }

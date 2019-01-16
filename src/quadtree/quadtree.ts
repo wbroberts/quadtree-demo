@@ -108,8 +108,25 @@ export class QuadTree {
     return this.points.length === this.capacity;
   }
 
-  isEmpty(): boolean {
-    return this.points.length === 0;
+  query(range: AreaBoundary, array: Point[] = []) {
+    if (!this.boundary.intersects(range)) {
+      return array;
+    }
+
+    for (let p of this.points) {
+      if (range.contains(p)) {
+        array.push(p);
+      }
+    }
+
+    if (this.isDivided) {
+      this.topLeft.query(range, array);
+      this.topRight.query(range, array);
+      this.bottomLeft.query(range, array);
+      this.bottomRight.query(range, array);
+    }
+
+    return array;
   }
 
   clear(): void {}
