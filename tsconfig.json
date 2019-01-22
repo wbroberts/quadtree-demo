@@ -5,6 +5,8 @@
     "module": "commonjs",
     "outDir": "./dist/js",
     // "rootDir": "./src/",
+    // "declaration": true,
+    // "declarationMap": true,
     // "strict": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,

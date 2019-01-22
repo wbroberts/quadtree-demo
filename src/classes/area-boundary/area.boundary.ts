@@ -1,4 +1,4 @@
-import { Point } from '../point/point';
+import { Point, Vector } from '../point/point';
 
 export interface Boundary {
   x: number;
@@ -8,14 +8,15 @@ export interface Boundary {
 }
 
 export interface AreaBoundary {
-  center: Point;
+  center: Vector;
   width: number;
   height: number;
   (contains: Point): boolean;
+  (intersects: AreaBoundary): boolean;
 }
 
 export class AreaBoundary implements AreaBoundary {
-  center: Point;
+  center: Vector;
   width: number;
   height: number;
   x: number;
@@ -44,10 +45,10 @@ export class AreaBoundary implements AreaBoundary {
 
   intersects(range: AreaBoundary) {
     return !(
-      range.x >= this.x + this.width ||
-      range.y >= this.y + this.height ||
-      range.x + range.width <= this.x ||
-      range.y + range.height <= this.y
+      range.x > this.x + this.width ||
+      range.y > this.y + this.height ||
+      range.x + range.width < this.x ||
+      range.y + range.height < this.y
     );
   }
 }

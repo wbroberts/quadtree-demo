@@ -2,39 +2,22 @@ import { AreaBoundary, Boundary } from './../area-boundary/area.boundary';
 import { Point } from '../point/point';
 
 export class QuadTree {
-  private capacity: number = 4;
+  private capacity: number = 3;
   private points: Point[] = [];
   private boundary: AreaBoundary;
   private isDivided: boolean = false;
-  ctx: CanvasRenderingContext2D;
 
-  topLeft: QuadTree = null;
-  topRight: QuadTree = null;
-  bottomLeft: QuadTree = null;
-  bottomRight: QuadTree = null;
+  topLeft?: QuadTree;
+  topRight?: QuadTree;
+  bottomLeft?: QuadTree;
+  bottomRight?: QuadTree;
 
-  constructor(area: Boundary, ctx: CanvasRenderingContext2D) {
+  constructor(area: Boundary, public ctx: CanvasRenderingContext2D) {
     this.boundary = new AreaBoundary(area);
-    this.ctx = ctx;
-    this.draw(ctx);
+    // this.draw(ctx);
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    ctx.lineWidth = 1;
-
-    !this.isDivided ? (ctx.strokeStyle = '#fff') : (ctx.strokeStyle = 'red');
-
-    ctx.strokeRect(
-      this.boundary.x,
-      this.boundary.y,
-      this.boundary.width,
-      this.boundary.height
-    );
-
-    ctx.stroke();
-  }
-
-  divide() {
+  divide(): void {
     const halfWidth = this.boundary.width / 2;
     const halfHeight = this.boundary.height / 2;
 
@@ -79,7 +62,7 @@ export class QuadTree {
     );
 
     this.isDivided = true;
-    this.draw(this.ctx);
+    // this.draw(this.ctx);
   }
 
   insert(point: Point): boolean {
@@ -108,7 +91,7 @@ export class QuadTree {
     return this.points.length === this.capacity;
   }
 
-  query(range: AreaBoundary, array: Point[] = []) {
+  query(range: AreaBoundary, array: Point[] = []): Point[] {
     if (!this.boundary.intersects(range)) {
       return array;
     }
@@ -129,5 +112,18 @@ export class QuadTree {
     return array;
   }
 
-  clear(): void {}
+  draw(ctx: CanvasRenderingContext2D): void {
+    ctx.lineWidth = 1;
+
+    !this.isDivided ? (ctx.strokeStyle = 'yellow') : (ctx.strokeStyle = 'red');
+
+    ctx.strokeRect(
+      this.boundary.x,
+      this.boundary.y,
+      this.boundary.width,
+      this.boundary.height
+    );
+
+    ctx.stroke();
+  }
 }

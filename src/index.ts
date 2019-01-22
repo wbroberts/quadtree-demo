@@ -1,48 +1,93 @@
-import { QuadTree } from './quadtree/quadtree';
-import { Point } from './point/point';
-import { Boundary, AreaBoundary } from './area-boundary/area.boundary';
+import { QuadTree, Point, AreaBoundary } from './classes';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = 500;
 canvas.height = 500;
 
-ctx.fillStyle = 'black';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+let qTree: QuadTree;
+let points: Point[] = [];
+let point: Point;
 
-const qTree = new QuadTree(
-  { x: 0, y: 0, width: canvas.width, height: canvas.height },
-  ctx
-);
+for (let i = 0; i < 50; i++) {
+  const x = Math.random() * canvas.width;
+  const y = Math.random() * canvas.height;
+  const radius = 10;
+
+  point = new Point(x, y, radius, { i, collided: false });
+  points.push(point);
+}
+
+const mouse = new Point(50, 50, 10, { i: 'mouse', collided: false });
+
+const loop = () => {
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  qTree = new QuadTree({ x: 0, y: 0, width: canvas.width, height: canvas.height }, ctx);
+  mouse.render(ctx, false);
+  qTree.insert(mouse);
+
+  for (const p of points) {
+    p.render(ctx, false);
+    p.move();
+    qTree.insert(p);
+
+    const boundary = {
+      x: p.left - p.radius / 2,
+      y: p.top - p.radius / 2,
+      width: p.maxDistance() * 2,
+      height: p.maxDistance() * 2
+    };
+
+    const area = new AreaBoundary(boundary);
+    const toCheck = qTree.query(area);
+
+    for (let c of toCheck) {
+      if (p !== c && p.distance(c) / 2 <= p.maxDistance() && p.isColliding(c)) {
+        p.render(ctx, true, 'red');
+        c.render(ctx, true, 'red');
+
+        p.data.collided = true;
+        c.data.collided = true;
+      }
+    }
+  }
+
+  const mboundary = {
+    x: mouse.left - mouse.radius / 2,
+    y: mouse.top - mouse.radius / 2,
+    width: mouse.maxDistance() * 2,
+    height: mouse.maxDistance() * 2
+  };
+
+  const marea = new AreaBoundary(mboundary);
+  const mtoCheck = qTree.query(marea);
+
+  for (let c of mtoCheck) {
+    if (
+      mouse !== c &&
+      mouse.distance(c) / 2 <= mouse.maxDistance() &&
+      mouse.isColliding(c)
+    ) {
+      mouse.render(ctx, true, 'red');
+      c.render(ctx, true, 'yellow');
+
+      mouse.data.collided = true;
+    }
+  }
+
+  requestAnimationFrame(loop);
+};
 
 window.onload = () => {
   document.body.appendChild(canvas);
+  document.addEventListener('mousemove', e => {
+    const x = e.clientX;
+    const y = e.clientY;
 
-  for (let i = 0; i < 300; i++) {
-    const x = Math.random() * canvas.width;
-    const y = Math.random() * canvas.height;
-
-    const point = new Point(x, y, i);
-    qTree.insert(point);
-
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(x, y, 2, 2);
-  }
-
-  const x = (Math.random() * canvas.width) / 2;
-  const y = (Math.random() * canvas.height) / 2;
-  const width = 200;
-  const height = 200;
-
-  ctx.strokeStyle = 'yellow';
-  ctx.strokeRect(x, y, width, height);
-
-  const boundary = new AreaBoundary({ x, y, width, height });
-  const points = qTree.query(boundary);
-
-  for (let p of points) {
-    ctx.fillStyle = 'lightseagreen';
-    ctx.fillRect(p.x, p.y, 4, 4);
-  }
-  console.log(points.length);
+    mouse.x = x;
+    mouse.y = y;
+  });
+  loop();
 };
