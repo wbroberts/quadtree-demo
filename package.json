@@ -1,24 +1,38 @@
 {
-  "name": "quadtree",
+  "name": "quadtree-demo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.bundle.js",
+  "main": "dist/index.html",
   "scripts": {
-    "bundle": "webpack --progress"
+    "build": "webpack --display-error-details",
+    "start": "live-server dist/"
   },
-  "author": "William Roberts",
-  "license": "ISC",
+  "author": {
+    "name": "William Roberts",
+    "email": "willbarronroberts@gmail.com",
+    "url": "https://www.williambarronroberts.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.2.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
-    "@babel/preset-env": "^7.2.3",
-    "@babel/preset-typescript": "^7.1.0",
-    "babel-loader": "^8.0.5",
-    "nodemon": "^1.18.9",
-    "ts-loader": "^5.3.3",
-    "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1"
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "babel-loader": "^8.0.6",
+    "live-server": "^1.2.1",
+    "nodemon": "^1.19.1",
+    "ts-loader": "^5.4.5",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
+  },
+  "dependencies": {
+    "wbroberts-quadtree-outline": "0.0.1"
   }
 }

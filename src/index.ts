@@ -1,41 +1,43 @@
-import { QuadTree, Point, AreaBoundary } from './classes';
+import { AreaBoundary, QuadTree } from 'wbroberts-quadtree-outline';
+
+import { RenderingPoint } from './rendering-point';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = 500;
 canvas.height = 500;
 
+const canvasBoundary = new AreaBoundary({ x: 0, y: 0, width: canvas.width, height: canvas.height });
 let qTree: QuadTree;
-let points: Point[] = [];
-let point: Point;
+let points: RenderingPoint[] = [];
 
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 500; i++) {
   const x = Math.random() * canvas.width;
   const y = Math.random() * canvas.height;
-  const radius = 10;
+  const radius = 5;
+  const point = new RenderingPoint(x, y, radius, { i, collided: false });
 
-  point = new Point(x, y, radius, { i, collided: false });
   points.push(point);
 }
 
-const mouse = new Point(50, 50, 10, { i: 'mouse', collided: false });
+const mouse = new RenderingPoint(50, 50, 10, { i: 'mouse', collided: false });
 
 const loop = () => {
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = '#2D3748';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  qTree = new QuadTree({ x: 0, y: 0, width: canvas.width, height: canvas.height }, ctx);
+  qTree = new QuadTree(canvasBoundary, ctx);
   mouse.render(ctx, false);
   qTree.insert(mouse);
 
   for (const p of points) {
-    p.render(ctx, false);
+    p.render(ctx, false, '#319795');
     p.move();
     qTree.insert(p);
 
     const boundary = {
-      x: p.left - p.radius / 2,
-      y: p.top - p.radius / 2,
+      x: p.left,
+      y: p.top,
       width: p.maxDistance() * 2,
       height: p.maxDistance() * 2
     };
@@ -45,8 +47,8 @@ const loop = () => {
 
     for (let c of toCheck) {
       if (p !== c && p.distance(c) / 2 <= p.maxDistance() && p.isColliding(c)) {
-        p.render(ctx, true, 'red');
-        c.render(ctx, true, 'red');
+        p.render(ctx, true, '#E53E3E');
+        c.render(ctx, true, '#E53E3E');
 
         p.data.collided = true;
         c.data.collided = true;
@@ -54,15 +56,15 @@ const loop = () => {
     }
   }
 
-  const mboundary = {
-    x: mouse.left - mouse.radius / 2,
-    y: mouse.top - mouse.radius / 2,
+  const mouseBoundary = {
+    x: mouse.left,
+    y: mouse.top,
     width: mouse.maxDistance() * 2,
     height: mouse.maxDistance() * 2
   };
 
-  const marea = new AreaBoundary(mboundary);
-  const mtoCheck = qTree.query(marea);
+  const mouseArea = new AreaBoundary(mouseBoundary);
+  const mtoCheck = qTree.query(mouseArea);
 
   for (let c of mtoCheck) {
     if (
@@ -70,8 +72,8 @@ const loop = () => {
       mouse.distance(c) / 2 <= mouse.maxDistance() &&
       mouse.isColliding(c)
     ) {
-      mouse.render(ctx, true, 'red');
-      c.render(ctx, true, 'yellow');
+      mouse.render(ctx, true, '#742A2A');
+      c.render(ctx, true, '#FAF089');
 
       mouse.data.collided = true;
     }
@@ -81,10 +83,10 @@ const loop = () => {
 };
 
 window.onload = () => {
-  document.body.appendChild(canvas);
+  document.body.querySelector('#container').appendChild(canvas);
   document.addEventListener('mousemove', e => {
-    const x = e.clientX;
-    const y = e.clientY;
+    const x = e.clientX - canvas.getBoundingClientRect().left;
+    const y = e.clientY - canvas.getBoundingClientRect().top;
 
     mouse.x = x;
     mouse.y = y;

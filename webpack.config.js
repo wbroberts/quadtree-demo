@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'dist/js'),
-    filename: 'index.bundle.js'
+    filename: 'index.bundle.js',
   },
   mode: 'development',
   module: {
@@ -14,12 +14,12 @@ module.exports = {
       {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
-      }
-    ]
+        loader: 'babel-loader',
+      },
+    ],
   },
   resolve: {
-    extensions: ['.ts']
+    extensions: ['.ts', '.js'],
   },
-  watch: true
+  watch: true,
 };

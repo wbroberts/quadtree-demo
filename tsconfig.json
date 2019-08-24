@@ -1,13 +1,8 @@
 {
   "compilerOptions": {
-    /* Basic Options */
-    "target": "es5",
+    "target": "es2016",
     "module": "commonjs",
     "outDir": "./dist/js",
-    // "rootDir": "./src/",
-    // "declaration": true,
-    // "declarationMap": true,
-    // "strict": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
