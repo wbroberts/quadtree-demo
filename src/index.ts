@@ -45,7 +45,7 @@ const loop = () => {
     const area = new AreaBoundary(boundary);
     const toCheck = qTree.query(area);
 
-    for (let c of toCheck) {
+    for (const c of toCheck) {
       if (p !== c && p.distance(c) / 2 <= p.maxDistance() && p.isColliding(c)) {
         p.render(ctx, true, '#E53E3E');
         c.render(ctx, true, '#E53E3E');
@@ -66,7 +66,7 @@ const loop = () => {
   const mouseArea = new AreaBoundary(mouseBoundary);
   const mtoCheck = qTree.query(mouseArea);
 
-  for (let c of mtoCheck) {
+  for (const c of mtoCheck) {
     if (
       mouse !== c &&
       mouse.distance(c) / 2 <= mouse.maxDistance() &&

@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/wbroberts/quadtree-demo"
   },
   "license": "MIT",
   "devDependencies": {
